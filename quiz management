@@ -1,0 +1,25 @@
+<?php
+include 'db.php';
+
+// Add a new quiz
+if (isset($_POST['add_quiz'])) {
+    $title = $_POST['title'];
+    $question = $_POST['question'];
+    $options = json_encode($_POST['options']);
+    $answer = $_POST['answer'];
+
+    $stmt = $pdo->prepare("INSERT INTO quizzes (title, question, options, answer) VALUES (?, ?, ?, ?)");
+    if ($stmt->execute([$title, $question, $options, $answer])) {
+        echo "Quiz added successfully!";
+    } else {
+        echo "Error adding quiz.";
+    }
+}
+
+// Get all quizzes
+if (isset($_GET['get_quizzes'])) {
+    $stmt = $pdo->query("SELECT * FROM quizzes");
+    $quizzes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    echo json_encode($quizzes);
+}
+?>
